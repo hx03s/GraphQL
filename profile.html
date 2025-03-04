@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Reboot01</title>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link
+      rel="Reboot01 Icon"
+      href="https://www.bahraineducation.com/wp-content/uploads/2023/11/313987904_683021406472336_2407011263974831576_n.jpg"
+      type="image/x-icon"
+    />
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  </head>
+
+  <body>
+    <div class="container">
+      <!-- Profile Section -->
+      <div class="profile-section">
+        <div class="profile-header">
+          <div id="user-info"></div>
+          <div class="logout-container">
+            <button id="logout-btn" onclick="logout()">
+              <img
+                src="png/Logout Icon.png"
+                alt="logout logo"
+                id="logout-logo"
+              />Logout
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Stats Container -->
+      <div class="stats-container">
+        <div class="stat-card" id="audit-stats">
+          <h3>Audit Activity</h3>
+          <div class="audit-bars">
+            <div class="audit-bar">
+              <div class="skill-label">
+                <span>Done</span>
+                <span id="audits-done">0</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="audits-done-bar"></div>
+              </div>
+            </div>
+            <div class="audit-bar">
+              <div class="skill-label">
+                <span>Received</span>
+                <span id="audits-received">0</span>
+              </div>
+              <div class="progress-bar">
+                <div class="progress-fill" id="audits-received-bar"></div>
+              </div>
+              <div class="audit-ratio">
+                <span>Ratio: </span>
+                <br />
+                <span id="audit-ratio-value">0</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="stat-card" id="skills-stats">
+          <h3>Top Skills</h3>
+          <div id="skills-container">
+            <!-- Skills bars will be populated via JavaScript -->
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <script src="server/profile.js"></script>
+    <script src="server/audit.js"></script>
+    <script src="server/skills.js"></script>
+  </body>
+</html>
