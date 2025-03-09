@@ -11,6 +11,7 @@
       type="image/x-icon"
     />
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
   </head>
 
   <body>
@@ -65,14 +66,37 @@
         <div class="stat-card" id="skills-stats">
           <h3>Top Skills</h3>
           <div id="skills-container">
-            <!-- Skills bars will be populated via JavaScript -->
+            <!-- Skills chart will be populated via JavaScript -->
+          </div>
+        </div>
+      </div>
+
+      <div class="stat-card" id="audits-status">
+        <h3>Audit Status</h3>
+        <div class="audit-status-container">
+          <div class="audit-status-section">
+            <h4>Passed Audits</h4>
+            <div id="passed-audits" class="audit-list"></div>
+          </div>
+          <div class="audit-status-section">
+            <h4>Failed Audits</h4>
+            <div id="failed-audits" class="audit-list"></div>
+          </div>
+          <div class="audit-status-section">
+            <h4>Expired Audits</h4>
+            <div id="expired-audits" class="audit-list"></div>
+          </div>
+          <div class="audit-status-section">
+            <h4>To Do Audits</h4>
+            <div id="todo-audits" class="audit-list"></div>
           </div>
         </div>
       </div>
     </div>
 
     <script src="server/profile.js"></script>
-    <script src="server/audit.js"></script>
+    <script src="server/audit-ratio.js"></script>
+    <script src="server/audits-done.js"></script>
     <script src="server/skills.js"></script>
   </body>
 </html>

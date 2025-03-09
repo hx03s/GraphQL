@@ -1,11 +1,11 @@
 async function getSkillsData() {
     // First, let's query to see all skill types
-    const skillTypesQuery = `
+    const query = `
     query {
         user {
             transactions(where: {
                 type: {
-                    _like: "skill_%"
+                    _like: "skill%"
                 }
             }) {
                 type
@@ -17,45 +17,27 @@ async function getSkillsData() {
     `;
 
     try {
-        const data = await fetchGraphQL(skillTypesQuery);
-        console.log('All skill types found:', [...new Set(data?.data?.user[0]?.transactions?.map(t => t.type) || [])]);
+        const data = await fetchGraphQL(query);
+        // Log all found skill types to debug
+        const allTypes = [...new Set(data?.data?.user[0]?.transactions?.map(t => t.type) || [])];
+        console.log('All available skill types:', allTypes);
         
-        // Now query for specific skills including possible variations
-        const query = `
-        query {
-            user {
-                transactions(where: {
-                    type: {
-                        _in: [
-                            "skill_prog", "skill_go", 
-                            "skill_frontend", "skill_front", "skill_front-end",
-                            "skill_js", "skill_javascript",
-                            "skill_html", "skill_html5",
-                            "skill_backend", "skill_back", "skill_back-end"
-                        ]
-                    }
-                }) {
-                    type
-                    amount
-                    createdAt
-                }
-            }
-        }
-        `;
-
-        const skillData = await fetchGraphQL(query);
-        console.log('Raw skills data:', skillData);
-        
-        if (skillData?.data?.user && skillData.data.user.length > 0) {
-            const transactions = skillData.data.user[0].transactions;
+        if (data?.data?.user && data.data.user.length > 0) {
+            const transactions = data.data.user[0].transactions;
             console.log('Found transactions:', transactions);
             displayTopSkills(transactions);
         } else {
-            console.log('No user transactions found in response:', skillData);
+            console.log('No user transactions found in response:', data);
         }
     } catch (error) {
         console.error('Error fetching skills data:', error);
     }
+}
+
+function calculateSkillPercentage(xp) {
+    // Define maximum XP threshold (100%)
+    const MAX_XP = 1000;
+    return Math.min((xp / MAX_XP) * 100, 100);
 }
 
 function displayTopSkills(transactions) {
@@ -68,46 +50,27 @@ function displayTopSkills(transactions) {
     
     // Define skill categories with proper names and initial values
     const skillCategories = {
-        skill_prog: { name: 'Programming', xp: 0 },
-        skill_go: { name: 'Go', xp: 0 },
-        skill_frontend: { name: 'Front-End', xp: 0, aliases: ['skill_front', 'skill_front-end'] },
-        skill_js: { name: 'JavaScript', xp: 0, aliases: ['skill_javascript'] },
-        skill_html: { name: 'HTML', xp: 0, aliases: ['skill_html5'] },
-        skill_backend: { name: 'Back-End', xp: 0, aliases: ['skill_back', 'skill_back-end'] }
+        prog: { name: 'Programming', xp: 0, types: ['skill_prog', 'skill_algo'] },
+        go: { name: 'Go', xp: 0, types: ['skill_go'] },
+        frontend: { name: 'Front-End', xp: 0, types: ['skill_frontend', 'skill_front', 'skill_front-end'] },
+        js: { name: 'JavaScript', xp: 0, types: ['skill_js', 'skill_javascript'] },
+        html: { name: 'HTML', xp: 0, types: ['skill_html', 'skill_html5'] },
+        backend: { name: 'Back-End', xp: 0, types: ['skill_backend', 'skill_back', 'skill_back-end'] }
     };
 
     // Calculate total XP for each skill category
     transactions.forEach(transaction => {
-        console.log('Processing transaction:', transaction.type, transaction.amount);
-        
-        // Check direct match
-        if (skillCategories[transaction.type]) {
-            skillCategories[transaction.type].xp += transaction.amount || 1;
-            return;
-        }
-        
-        // Check aliases
-        for (const [mainType, data] of Object.entries(skillCategories)) {
-            if (data.aliases && data.aliases.includes(transaction.type)) {
+        for (const [category, data] of Object.entries(skillCategories)) {
+            if (data.types.includes(transaction.type)) {
                 data.xp += transaction.amount || 1;
-                console.log(`Matched alias ${transaction.type} to ${mainType}`);
                 break;
             }
         }
     });
 
-    // Log the XP totals for each skill
-    Object.entries(skillCategories).forEach(([type, data]) => {
-        console.log(`${type}: ${data.xp} XP`);
-    });
-
-    // Find the maximum XP value for normalization
-    const maxXP = Math.max(...Object.values(skillCategories).map(skill => skill.xp));
-    console.log('Max XP found:', maxXP);
-
-    // Normalize values to 0-100 scale
+    // Calculate skill percentages based on fixed thresholds
     Object.values(skillCategories).forEach(skill => {
-        skill.normalizedValue = maxXP > 0 ? (skill.xp / maxXP) * 100 : 0;
+        skill.percentage = calculateSkillPercentage(skill.xp);
     });
 
     const ctx = document.getElementById('skillsRadar').getContext('2d');
@@ -118,7 +81,7 @@ function displayTopSkills(transactions) {
             labels: Object.values(skillCategories).map(skill => skill.name),
             datasets: [{
                 label: 'Skill Progress',
-                data: Object.values(skillCategories).map(skill => skill.normalizedValue),
+                data: Object.values(skillCategories).map(skill => skill.percentage),
                 backgroundColor: 'rgba(14, 255, 255, 0.2)',
                 borderColor: '#0ef',
                 borderWidth: 2,

@@ -75,6 +75,7 @@ document.addEventListener('DOMContentLoaded', () => {
     getUserData();
     window.initAuditStats();
     window.initSkillsData();
+    window.initGetAuditStatus();
 });
 
 document.getElementById('logout-btn').addEventListener('click', logout);

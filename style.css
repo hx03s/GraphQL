@@ -12,6 +12,15 @@ body {
   align-items: center;
   min-height: 100vh;
   background: #000;
+  width: 100%;
+}
+
+.container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
 }
 
 /* Login Page */
@@ -190,6 +199,7 @@ button {
   display: flex;
   gap: 50px;
   padding: 0 20px;
+  justify-content: center;
 }
 
 #audit-stats {
@@ -249,6 +259,10 @@ button {
 
 /* Skills Container */
 
+.stat-card {
+  justify-content: center;
+}
+
 .skill-wrapper {
   margin: 15px 0;
 }
@@ -259,7 +273,7 @@ button {
 }
 
 #skills-stats {
-  width: 400px;
+  width: 450px;
 }
 
 .skill-info {
@@ -308,34 +322,235 @@ button {
   height: 100% !important;
 }
 
+/* XP Progress Section */
+.xp-section {
+    background: #1f242d;
+    border-radius: 15px;
+    padding: 20px;
+    margin: 20px auto;
+    box-shadow: 0 0 10px rgba(14, 255, 255, 0.2);
+    width: calc(100% - 40px); /* Match stats-container width accounting for padding */
+}
+
+.xp-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+.xp-header h3 {
+    color: #fff;
+    margin: 0;
+}
+
+#xp-time-range {
+    background: #2a2f3a;
+    color: #fff;
+    border: 1px solid #0ef;
+    padding: 8px 15px;
+    border-radius: 5px;
+    cursor: pointer;
+    outline: none;
+}
+
+#xp-time-range:hover {
+    border-color: #fff;
+}
+
+.xp-totals {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+    gap: 20px;
+}
+
+.xp-total {
+    text-align: center;
+    color: #fff;
+    flex: 1;
+    min-width: 200px;
+}
+
+.total-label {
+    display: block;
+    color: #0ef;
+    margin-bottom: 5px;
+    font-weight: 500;
+}
+
+#total-user-xp,
+#total-avg-xp {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+#xp-chart-container {
+    width: 100%;
+    height: 300px;
+    position: relative;
+    margin: 0 auto;
+}
+
+/* Audits Done */
+
+.audit-status-container {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+  padding: 15px;
+}
+
+.audit-status-section {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  padding: 15px;
+  transition: transform 0.3s ease;
+}
+
+.audit-status-section:hover {
+  transform: translateY(-5px);
+}
+
+.audit-status-section h4 {
+  color: #fff;
+  margin-bottom: 15px;
+  font-size: 1.1em;
+  border-bottom: 2px solid #0ef;
+  padding-bottom: 5px;
+}
+
+.audit-list {
+  max-height: 200px;
+  overflow-y: auto;
+  padding-right: 10px;
+}
+
+.audit-list::-webkit-scrollbar {
+  width: 5px;
+}
+
+.audit-list::-webkit-scrollbar-track {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+}
+
+.audit-list::-webkit-scrollbar-thumb {
+  background: #0ef;
+  border-radius: 5px;
+}
+
+.audit-item {
+  padding: 8px 12px;
+  margin: 5px 0;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 5px;
+  color: #fff;
+  font-size: 0.9em;
+  transition: all 0.3s ease;
+}
+
+.audit-item:hover {
+  background: rgba(255, 255, 255, 0.15);
+  transform: translateX(5px);
+}
+
+.audit-item p {
+  margin: 5px 0;
+}
+
+.audit-item .pass {
+  color: #4CAF50;
+  font-weight: bold;
+}
+
+.audit-item .fail {
+  color: #f44336;
+  font-weight: bold;
+}
+
+.audit-item .expired {
+  color: #ff9800;
+  font-weight: bold;
+}
+
+.audit-item .to-do {
+  color: #9e9e9e;
+  font-weight: bold;
+}
 
 /* Media Queries */
-
 @media screen and (max-width: 1024px) {
-  .stats-container {
-      flex-direction: column;
-      align-items: center;
-      gap: 30px;
-  }
+    .stats-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+    }
 
-  #audit-stats,
-  #skills-stats {
-      width: 90%;
-  }
+    #audit-stats,
+    #skills-stats {
+        width: 90%;
+    }
+
+    .xp-section {
+        width: 90%;
+    }
 }
 
 @media screen and (max-width: 768px) {
-  .stats-container {
-      padding: 0 10px;
-  }
+    .stats-container {
+        padding: 0 10px;
+    }
 
-  #audit-stats,
-  #skills-stats {
-      width: 100%;
-  }
+    #audit-stats,
+    #skills-stats {
+        width: 100%;
+    }
 
-  .profile-header {
-      flex-direction: column;
-      gap: 20px;
+    .xp-section {
+        width: calc(100% - 20px);
+        padding: 15px;
+        margin: 10px auto;
+    }
+
+    .profile-header {
+        flex-direction: column;
+        gap: 20px;
+    }
+
+    .xp-header {
+        flex-direction: column;
+        gap: 10px;
+        align-items: stretch;
+    }
+
+    .xp-header h3 {
+        text-align: center;
+    }
+
+    .xp-totals {
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .xp-total {
+        min-width: unset;
+    }
+
+    #xp-chart-container {
+        height: 250px;
+    }
+}
+
+@media screen and (max-width: 480px) {
+    #xp-chart-container {
+        height: 200px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+  .audit-status-container {
+    grid-template-columns: 1fr;
   }
 }
