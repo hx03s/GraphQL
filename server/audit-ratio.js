@@ -20,9 +20,9 @@ async function getAuditData() {
 }
 
 function formatBytes(bytes) {
-    if (bytes >= 1000000) { // MB
+    if (bytes >= 1000000) {
         return `${(bytes / 1000000).toFixed(2)} MB`;
-    } else { // KB
+    } else {
         return `${Math.round(bytes / 1000)} KB`;
     }
 }
@@ -50,11 +50,18 @@ function displayAuditRatio(userData) {
     const doneWidth = (totalUpBytes / maxValue) * 100;
     const receivedWidth = (totalDownBytes / maxValue) * 100;
 
-    const doneBar = document.querySelector('#audits-done-bar');
-    const receivedBar = document.querySelector('#audits-received-bar');
+    const doneBar = document.getElementById('audits-done-bar');
+    const receivedBar = document.getElementById('audits-received-bar');
 
-    if (doneBar) doneBar.style.width = `${doneWidth}%`;
-    if (receivedBar) receivedBar.style.width = `${receivedWidth}%`;
+    // Update SVG rect widths with #0ef color
+    if (doneBar) {
+        doneBar.setAttribute('width', `${doneWidth}%`);
+        doneBar.style.fill = '#0ef';
+    }
+    if (receivedBar) {
+        receivedBar.setAttribute('width', `${receivedWidth}%`);
+        receivedBar.style.fill = '#0ef';
+    }
 }
 
 // Make the initialization function available globally

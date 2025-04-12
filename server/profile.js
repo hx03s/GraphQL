@@ -72,10 +72,12 @@ function logout() {
 
 // Initialize profile page
 document.addEventListener('DOMContentLoaded', () => {
+    console.log('DOM Content Loaded, initializing...');
     getUserData();
     window.initAuditStats();
     window.initSkillsData();
     window.initGetAuditStatus();
+    window.initLevelData();
 });
 
 document.getElementById('logout-btn').addEventListener('click', logout);

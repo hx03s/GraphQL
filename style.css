@@ -1,4 +1,5 @@
 @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700;800;900&display=swap");
+
 * {
   margin: 0;
   padding: 0;
@@ -19,8 +20,10 @@ body {
   display: flex;
   flex-direction: column;
   align-items: center;
-  justify-content: center;
   width: 100%;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 20px;
 }
 
 /* Login Page */
@@ -143,7 +146,7 @@ button {
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  height: 20vh;
+  height: 15vh;
 }
 
 .profile-header {
@@ -156,6 +159,7 @@ button {
 
 #user-info {
   flex: 1;
+  text-align: center;
 }
 
 /* Logout Styles */
@@ -164,7 +168,7 @@ button {
   display: flex;
   align-items: center;
   gap: 10px;
-  margin-left: 10px;
+  padding-top: 10px;
 }
 
 #logout-logo {
@@ -322,77 +326,6 @@ button {
   height: 100% !important;
 }
 
-/* XP Progress Section */
-.xp-section {
-    background: #1f242d;
-    border-radius: 15px;
-    padding: 20px;
-    margin: 20px auto;
-    box-shadow: 0 0 10px rgba(14, 255, 255, 0.2);
-    width: calc(100% - 40px); /* Match stats-container width accounting for padding */
-}
-
-.xp-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-}
-
-.xp-header h3 {
-    color: #fff;
-    margin: 0;
-}
-
-#xp-time-range {
-    background: #2a2f3a;
-    color: #fff;
-    border: 1px solid #0ef;
-    padding: 8px 15px;
-    border-radius: 5px;
-    cursor: pointer;
-    outline: none;
-}
-
-#xp-time-range:hover {
-    border-color: #fff;
-}
-
-.xp-totals {
-    display: flex;
-    justify-content: space-around;
-    margin-bottom: 20px;
-    flex-wrap: wrap;
-    gap: 20px;
-}
-
-.xp-total {
-    text-align: center;
-    color: #fff;
-    flex: 1;
-    min-width: 200px;
-}
-
-.total-label {
-    display: block;
-    color: #0ef;
-    margin-bottom: 5px;
-    font-weight: 500;
-}
-
-#total-user-xp,
-#total-avg-xp {
-    font-size: 24px;
-    font-weight: bold;
-}
-
-#xp-chart-container {
-    width: 100%;
-    height: 300px;
-    position: relative;
-    margin: 0 auto;
-}
-
 /* Audits Done */
 
 .audit-status-container {
@@ -480,7 +413,54 @@ button {
   font-weight: bold;
 }
 
+/* Level Section Styles */
+.level-section {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.level-container {
+  width: 250px;
+  height: 150px;
+}
+
+.level-svg {
+  width: 100%;
+  height: 100%;
+}
+
+.level-background {
+  fill: none;
+  stroke: rgba(255, 255, 255, 0.1);
+  stroke-width: 12;
+}
+
+.level-progress {
+  fill: none;
+  stroke: #0ef;
+  stroke-width: 12;
+  stroke-linecap: round;
+  transform: rotate(-90deg);
+  transform-origin: center;
+  transition: stroke-dasharray 0.8s ease;
+}
+
+.level-text {
+  fill: #fff;
+  font-size: 48px;
+  font-weight: bold;
+}
+
+.level-label {
+  fill: #0ef;
+  font-size: 20px;
+}
+
 /* Media Queries */
+
 @media screen and (max-width: 1024px) {
     .stats-container {
         flex-direction: column;
@@ -496,8 +476,8 @@ button {
     .xp-section {
         width: 90%;
     }
-}
-
+  }
+  
 @media screen and (max-width: 768px) {
     .stats-container {
         padding: 0 10px;
@@ -538,13 +518,13 @@ button {
         min-width: unset;
     }
 
-    #xp-chart-container {
+    .xp-chart-container {
         height: 250px;
     }
 }
 
 @media screen and (max-width: 480px) {
-    #xp-chart-container {
+    .xp-chart-container {
         height: 200px;
     }
 }

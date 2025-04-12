@@ -73,7 +73,6 @@ async function getAuditStatus() {
             if (auditsContainer) {
                 auditsContainer.innerHTML = `
                     <h3>Your Audits</h3>
-                    <p>Here you can find back all your audits : the ones you have to make and the ones you've already made for other students projects.</p>
                     <div class="audit-status-container">
                         <div class="audit-status-section">
                             <h4>Passed Audits</h4>

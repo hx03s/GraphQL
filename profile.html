@@ -2,9 +2,9 @@
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
     <title>Reboot01</title>
-    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link rel="stylesheet" type="text/css" href="style.css"/>
     <link
       rel="Reboot01 Icon"
       href="https://www.bahraineducation.com/wp-content/uploads/2023/11/313987904_683021406472336_2407011263974831576_n.jpg"
@@ -20,15 +20,27 @@
       <div class="profile-section">
         <div class="profile-header">
           <div id="user-info"></div>
-          <div class="logout-container">
-            <button id="logout-btn" onclick="logout()">
-              <img
-                src="png/Logout Icon.png"
-                alt="logout logo"
-                id="logout-logo"
-              />Logout
-            </button>
-          </div>
+        </div>
+        <div class="logout-container">
+          <button id="logout-btn" onclick="logout()">
+            <img
+              src="png/Logout Icon.png"
+              alt="logout logo"
+              id="logout-logo"
+            />Logout
+          </button>
+        </div>
+      </div>
+      
+      <!-- Level Section -->
+      <div class="level-section">
+        <div class="level-container">
+          <svg class="level-svg" viewBox="0 0 300 200">
+            <circle class="level-background" cx="150" cy="100" r="70"/>
+            <circle class="level-progress" cx="150" cy="100" r="70"/>
+            <text class="level-text" x="150" y="100" text-anchor="middle" dominant-baseline="middle">0</text>
+            <text class="level-label" x="150" y="140" text-anchor="middle" dominant-baseline="middle">LEVEL</text>
+          </svg>
         </div>
       </div>
 
@@ -42,18 +54,20 @@
                 <span>Done</span>
                 <span id="audits-done">0</span>
               </div>
-              <div class="progress-bar">
-                <div class="progress-fill" id="audits-done-bar"></div>
-              </div>
+              <svg class="progress-bar" width="100%" height="20">
+                <rect class="progress-background" x="0" y="0" width="100%" height="20" rx="10" ry="10"/>
+                <rect id="audits-done-bar" class="progress-fill" x="0" y="0" height="20" rx="10" ry="10"/>
+              </svg>
             </div>
             <div class="audit-bar">
               <div class="skill-label">
                 <span>Received</span>
                 <span id="audits-received">0</span>
               </div>
-              <div class="progress-bar">
-                <div class="progress-fill" id="audits-received-bar"></div>
-              </div>
+              <svg class="progress-bar" width="100%" height="20">
+                <rect class="progress-background" x="0" y="0" width="100%" height="20" rx="10" ry="10"/>
+                <rect id="audits-received-bar" class="progress-fill" x="0" y="0" height="20" rx="10" ry="10"/>
+              </svg>
               <div class="audit-ratio">
                 <span>Ratio: </span>
                 <br />
@@ -95,6 +109,7 @@
     </div>
 
     <script src="server/profile.js"></script>
+    <script src="server/level.js"></script>
     <script src="server/audit-ratio.js"></script>
     <script src="server/audits-done.js"></script>
     <script src="server/skills.js"></script>

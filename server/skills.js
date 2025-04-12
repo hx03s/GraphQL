@@ -1,33 +1,47 @@
 async function getSkillsData() {
-    // First, let's query to see all skill types
+    // Query specifically for each skill category
     const query = `
     query {
-        user {
-            transactions(where: {
-                type: {
-                    _like: "skill%"
-                }
-            }) {
-                type
-                amount
-                createdAt
-            }
+        prog: transaction_aggregate(
+            where: {type: {_eq: "skill_prog"}}
+        ) {
+            aggregate { max { amount } }
         }
-    }
-    `;
+        backend: transaction_aggregate(
+            where: {type: {_eq: "skill_back-end"}}
+        ) {
+            aggregate { max { amount } }
+        }
+        frontend: transaction_aggregate(
+            where: {type: {_eq: "skill_front-end"}}
+        ) {
+            aggregate { max { amount } }
+        }
+        go: transaction_aggregate(
+            where: {type: {_eq: "skill_go"}}
+        ) {
+            aggregate { max { amount } }
+        }
+        js: transaction_aggregate(
+            where: {type: {_eq: "skill_js"}}
+        ) {
+            aggregate { max { amount } }
+        }
+        html: transaction_aggregate(
+            where: {type: {_eq: "skill_html"}}
+        ) {
+            aggregate { max { amount } }
+        }
+    }`;
 
     try {
         const data = await fetchGraphQL(query);
-        // Log all found skill types to debug
-        const allTypes = [...new Set(data?.data?.user[0]?.transactions?.map(t => t.type) || [])];
-        console.log('All available skill types:', allTypes);
+        console.log('Skills data:', data);
         
-        if (data?.data?.user && data.data.user.length > 0) {
-            const transactions = data.data.user[0].transactions;
-            console.log('Found transactions:', transactions);
-            displayTopSkills(transactions);
+        if (data?.data) {
+            displayTopSkills(data.data);
         } else {
-            console.log('No user transactions found in response:', data);
+            console.log('No skills data found in response');
         }
     } catch (error) {
         console.error('Error fetching skills data:', error);
@@ -35,106 +49,152 @@ async function getSkillsData() {
 }
 
 function calculateSkillPercentage(xp) {
-    // Define maximum XP threshold (100%)
-    const MAX_XP = 1000;
-    return Math.min((xp / MAX_XP) * 100, 100);
+    // More balanced calculation to match website percentages
+    // Using a higher divisor to reduce sensitivity
+    const percentage = (xp / 150) * 10;  // Reduced sensitivity
+    
+    // Lower base percentage
+    const basePercentage = 5;
+    const adjustedPercentage = basePercentage + percentage;
+    
+    // Cap at 100% and ensure we have at least 1 decimal place
+    return Math.min(Math.round(adjustedPercentage * 10) / 10, 100);
 }
 
-function displayTopSkills(transactions) {
-    console.log('Processing transactions:', transactions);
-    
+function displayTopSkills(skillsData) {
     const skillsContainer = document.getElementById('skills-container');
     if (!skillsContainer) return;
     
-    skillsContainer.innerHTML = '<canvas id="skillsRadar"></canvas>';
-    
-    // Define skill categories with proper names and initial values
-    const skillCategories = {
-        prog: { name: 'Programming', xp: 0, types: ['skill_prog', 'skill_algo'] },
-        go: { name: 'Go', xp: 0, types: ['skill_go'] },
-        frontend: { name: 'Front-End', xp: 0, types: ['skill_frontend', 'skill_front', 'skill_front-end'] },
-        js: { name: 'JavaScript', xp: 0, types: ['skill_js', 'skill_javascript'] },
-        html: { name: 'HTML', xp: 0, types: ['skill_html', 'skill_html5'] },
-        backend: { name: 'Back-End', xp: 0, types: ['skill_backend', 'skill_back', 'skill_back-end'] }
-    };
+    // Create SVG element
+    skillsContainer.innerHTML = `
+        <svg id="skillsRadar" viewBox="0 0 400 400" width="100%" height="100%">
+            <g transform="translate(200, 200)">
+                <g class="grid-lines"></g>
+                <g class="skills-plot"></g>
+                <g class="labels"></g>
+            </g>
+        </svg>`;
 
-    // Calculate total XP for each skill category
-    transactions.forEach(transaction => {
-        for (const [category, data] of Object.entries(skillCategories)) {
-            if (data.types.includes(transaction.type)) {
-                data.xp += transaction.amount || 1;
-                break;
-            }
+    // Define skill categories with their display names
+    const skillCategories = [
+        { name: 'Programming', key: 'prog' },
+        { name: 'Back-End', key: 'backend' },
+        { name: 'Front-End', key: 'frontend' },
+        { name: 'Go', key: 'go' },
+        { name: 'JavaScript', key: 'js' },
+        { name: 'HTML', key: 'html' }
+    ];
+
+    // Get percentages from the data
+    skillCategories.forEach(skill => {
+        const value = skillsData[skill.key]?.aggregate?.max?.amount || 0;
+        skill.percentage = Math.max(Math.round(value), 5);
+        console.log(`${skill.name}: ${skill.percentage}%`);
+    });
+
+    const svg = document.getElementById('skillsRadar');
+    const gridGroup = svg.querySelector('.grid-lines');
+    const skillsGroup = svg.querySelector('.skills-plot');
+    const labelsGroup = svg.querySelector('.labels');
+    
+    // Draw background circles
+    [20, 40, 60, 80, 100].forEach(value => {
+        const circle = document.createElementNS('http://www.w3.org/2000/svg', 'circle');
+        circle.setAttribute('cx', '0');
+        circle.setAttribute('cy', '0');
+        circle.setAttribute('r', value * 1.5);
+        circle.setAttribute('fill', 'none');
+        circle.setAttribute('stroke', 'rgba(255, 255, 255, 0.2)');
+        gridGroup.appendChild(circle);
+    });
+
+    // Draw skills polygon
+    const points = skillCategories.map((skill, i) => {
+        const angle = (i * 2 * Math.PI / skillCategories.length) - Math.PI/2;
+        const radius = skill.percentage * 1.5;
+        return `${radius * Math.cos(angle)},${radius * Math.sin(angle)}`;
+    }).join(' ');
+
+    const polygon = document.createElementNS('http://www.w3.org/2000/svg', 'polygon');
+    polygon.setAttribute('points', points);
+    polygon.setAttribute('fill', 'rgba(14, 255, 255, 0.2)');
+    polygon.setAttribute('stroke', '#0ef');
+    polygon.setAttribute('stroke-width', '2');
+    skillsGroup.appendChild(polygon);
+
+    // Add labels
+    skillCategories.forEach((skill, i) => {
+        const angle = (i * 2 * Math.PI / skillCategories.length) - Math.PI/2;
+        const radius = 170;
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        
+        const text = document.createElementNS('http://www.w3.org/2000/svg', 'text');
+        text.textContent = `${skill.name} (${skill.percentage}%)`;
+        text.setAttribute('x', x);
+        text.setAttribute('y', y);
+        text.setAttribute('text-anchor', 'middle');
+        text.setAttribute('fill', '#fff');
+        text.setAttribute('font-size', '12px');
+        labelsGroup.appendChild(text);
+    });
+
+    // Add tooltips
+    skillsGroup.addEventListener('mousemove', (event) => {
+        const tooltip = document.getElementById('skills-tooltip') || createTooltip();
+        tooltip.style.display = 'block';
+        tooltip.style.left = `${event.pageX + 10}px`;
+        tooltip.style.top = `${event.pageY + 10}px`;
+        
+        // Find closest skill point
+        const rect = svg.getBoundingClientRect();
+        const mouseX = event.clientX - rect.left - 200;
+        const mouseY = event.clientY - rect.top - 200;
+        
+        const closest = findClosestSkill(mouseX, mouseY, skillCategories);
+        if (closest) {
+            tooltip.textContent = `${closest.name}: ${closest.percentage}%`;
         }
     });
 
-    // Calculate skill percentages based on fixed thresholds
-    Object.values(skillCategories).forEach(skill => {
-        skill.percentage = calculateSkillPercentage(skill.xp);
+    skillsGroup.addEventListener('mouseleave', () => {
+        const tooltip = document.getElementById('skills-tooltip');
+        if (tooltip) tooltip.style.display = 'none';
     });
+}
 
-    const ctx = document.getElementById('skillsRadar').getContext('2d');
+function createTooltip() {
+    const tooltip = document.createElement('div');
+    tooltip.id = 'skills-tooltip';
+    tooltip.style.position = 'absolute';
+    tooltip.style.backgroundColor = 'rgba(0, 0, 0, 0.8)';
+    tooltip.style.color = '#fff';
+    tooltip.style.padding = '5px';
+    tooltip.style.borderRadius = '4px';
+    tooltip.style.pointerEvents = 'none';
+    document.body.appendChild(tooltip);
+    return tooltip;
+}
+
+function findClosestSkill(mouseX, mouseY, skills) {
+    // Simple distance calculation to find closest skill point
+    let closest = null;
+    let minDistance = Infinity;
     
-    new Chart(ctx, {
-        type: 'radar',
-        data: {
-            labels: Object.values(skillCategories).map(skill => skill.name),
-            datasets: [{
-                label: 'Skill Progress',
-                data: Object.values(skillCategories).map(skill => skill.percentage),
-                backgroundColor: 'rgba(14, 255, 255, 0.2)',
-                borderColor: '#0ef',
-                borderWidth: 2,
-                pointBackgroundColor: '#0ef',
-                pointBorderColor: '#fff',
-                pointHoverBackgroundColor: '#fff',
-                pointHoverBorderColor: '#0ef'
-            }]
-        },
-        options: {
-            scales: {
-                r: {
-                    beginAtZero: true,
-                    min: 0,
-                    max: 100,
-                    stepSize: 20,
-                    angleLines: { color: 'rgba(255, 255, 255, 0.2)' },
-                    grid: { color: 'rgba(255, 255, 255, 0.2)' },
-                    pointLabels: { 
-                        color: '#fff',
-                        font: {
-                            size: 12
-                        }
-                    },
-                    ticks: {
-                        color: '#fff',
-                        backdropColor: 'transparent',
-                        font: {
-                            size: 10
-                        }
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    labels: { 
-                        color: '#fff',
-                        font: {
-                            size: 14
-                        }
-                    }
-                },
-                tooltip: {
-                    callbacks: {
-                        label: function(context) {
-                            const skillData = Object.values(skillCategories)[context.dataIndex];
-                            return `${context.label}: ${Math.round(context.raw)}% (XP: ${skillData.xp})`;
-                        }
-                    }
-                }
-            }
+    skills.forEach((skill, i) => {
+        const angle = (i * 2 * Math.PI / skills.length) - Math.PI/2;
+        const radius = skill.percentage * 1.5;
+        const x = radius * Math.cos(angle);
+        const y = radius * Math.sin(angle);
+        
+        const distance = Math.sqrt(Math.pow(mouseX - x, 2) + Math.pow(mouseY - y, 2));
+        if (distance < minDistance) {
+            minDistance = distance;
+            closest = skill;
         }
     });
+    
+    return closest;
 }
 
 window.initSkillsData = getSkillsData;
