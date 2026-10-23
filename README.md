@@ -1,8 +1,16 @@
-# GraphQL Profile Dashboard
+<div align="center">
 
-A modern, responsive web application that provides a comprehensive profile dashboard for Reboot01 students. View your skills, audit statistics, and manage your learning progress in a beautiful interface.
+<img src="docs/preview.jpg" alt="GraphQL Profile" width="100%">
 
-🔗 **Live Demo**: [graph-ql-coral-eta.vercel.app](https://graph-ql-coral-eta.vercel.app)
+# GraphQL Profile
+
+**Your Reboot01 profile, from the school's GraphQL API: level, audit ratio, skills and audits.**
+
+<img src="https://img.shields.io/badge/JavaScript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white" alt="JavaScript"> <img src="https://img.shields.io/badge/GraphQL-E10098?style=for-the-badge&logo=graphql&logoColor=white" alt="GraphQL"> <img src="https://img.shields.io/badge/JWT-000000?style=for-the-badge&logo=jsonwebtokens&logoColor=white" alt="JWT"> <img src="https://img.shields.io/badge/SVG-FFB13B?style=for-the-badge" alt="SVG"> <img src="https://img.shields.io/badge/Vercel-000000?style=for-the-badge&logo=vercel&logoColor=white" alt="Vercel">
+
+[**Live demo**](https://graph-ql-coral-eta.vercel.app)
+
+</div>
 
 ## Features
 
@@ -91,14 +99,14 @@ The application is fully responsive and works seamlessly across:
 3. Log in with your Reboot01 credentials
 4. Explore your personalized dashboard
 
-## Contributing
-
-Feel free to contribute to this project by:
-1. Forking the repository
-2. Creating your feature branch
-3. Committing your changes
-4. Opening a pull request
-
 ## License
 
 This project is part of Reboot01's curriculum and follows their licensing guidelines.
+
+---
+
+<div align="center">
+
+Built by **Hasan Abdulla** · [github.com/hx03s](https://github.com/hx03s) · Bahrain 🇧🇭
+
+</div>
